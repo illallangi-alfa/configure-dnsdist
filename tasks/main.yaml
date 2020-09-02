@@ -1,0 +1,19 @@
+---
+- name: "Update templates"
+  template:
+    src:  "{{ item.src | default((item.dest | basename ()) + '.j2')}}"
+    dest: "{{ item.dest }}"
+  with_items: "{{ configure_dnsdist.templates[(ansible_os_family | lower) + '_' + (ansible_architecture | lower)] | default([]) }}"
+  notify: "dnsdist-restart"
+  tags:
+    - "dnsdist"
+
+- name: "Start and Enable Service"
+  service:
+    name:          "{{ item.name }}"
+    enabled:       "yes"
+    state:         "started"
+    daemon_reload: "yes"
+  with_items: "{{ configure_dnsdist.services[(ansible_os_family | lower) + '_' + (ansible_architecture | lower)] | default([]) }}"
+  tags:
+    - dnsdist

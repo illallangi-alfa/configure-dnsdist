@@ -1,0 +1,12 @@
+---
+configure_dnsdist:
+  templates:
+    common: &templates
+      - dest:  "/etc/dnsdist/dnsdist.conf"
+    debian_armv7l: *templates
+    debian_x86_64: *templates
+  services:
+    common: &services
+      - name: "dnsdist"
+    debian_armv7l: *services
+    debian_x86_64: *services

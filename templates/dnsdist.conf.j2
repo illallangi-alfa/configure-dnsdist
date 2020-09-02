@@ -1,0 +1,18 @@
+-- disable security status polling via DNS
+setSecurityPollSuffix("")
+
+setLocal("{{ ansible_ssh_host }}:53")
+
+-- Illallangi DNS Servers
+newServer({address="172.24.63.231", name="Illallangi Primary",   order=100, checkInterval=5})
+newServer({address="172.24.63.232", name="Illallangi Secondary", order=100, checkInterval=5})
+
+-- Internode DNS Servers
+newServer({address="192.231.203.132", name="Internode Primary",   order=200, checkInterval=60})
+newServer({address="192.231.203.3",   name="Internode Secondary", order=200, checkInterval=60})
+
+-- Server Policy and Packet Cache
+setServerPolicy(leastOutstanding)
+pc = newPacketCache(10000, 86400, 0, 60, 60, false)
+getPool(""):setCache(pc)
+setStaleCacheEntriesTTL(3600)
